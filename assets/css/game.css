@@ -1,0 +1,48 @@
+.hidden{
+    visibility: hidden;
+}
+
+#userInfo{
+    float: left;
+}
+
+h1, #startGame{
+    text-align: center !important;
+}
+
+#main{
+    border: 1px solid black;
+    width: fit-content;
+    text-align: center;
+    margin: auto;
+}
+
+#gameFrame{
+    border: 1px solid black;
+    width: fit-content;
+    padding: 5px;
+    margin: 10px;
+}
+
+#chatbox{
+    border: 1px solid black;
+    width: fit-content;
+    padding: 5px;
+    text-align: center;
+    position:relative;
+    top: 120px;
+    right: 240px;
+    float: left;
+}
+
+#score{
+    text-align: center;
+    border: 1px solid black;
+    width: 200px;
+    height: 500px;
+    padding: 5px;
+    margin: 10px;
+    float: right;
+    position: relative;
+    bottom: 500px;
+}
