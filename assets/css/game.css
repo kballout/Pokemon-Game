@@ -1,9 +1,16 @@
+
 .hidden{
     visibility: hidden;
 }
 
+hr{
+    color: white;
+}
+
 #userInfo{
     float: left;
+    padding-left: 20px;
+    font-size: larger;
 }
 
 h1, #startGame{
@@ -11,33 +18,35 @@ h1, #startGame{
 }
 
 #main{
-    border: 1px solid black;
+    border: 1px solid white;
     width: fit-content;
     text-align: center;
     margin: auto;
 }
 
 #gameFrame{
-    border: 1px solid black;
+    border: 1px solid white;
     width: fit-content;
     padding: 5px;
     margin: 10px;
 }
 
 #chatbox{
-    border: 1px solid black;
+    border: 1px solid white;
     width: fit-content;
     padding: 5px;
     text-align: center;
-    position:relative;
+    position: relative;
     top: 120px;
-    right: 240px;
+    right: 265px;
     float: left;
+    margin-top: 50px;
+    font-size: larger;
 }
 
 #score{
     text-align: center;
-    border: 1px solid black;
+    border: 1px solid white;
     width: 200px;
     height: 500px;
     padding: 5px;
@@ -45,4 +54,66 @@ h1, #startGame{
     float: right;
     position: relative;
     bottom: 500px;
+}
+
+img{
+    filter: contrast(0%) brightness(20%)
+}
+
+body{
+    margin: auto;
+
+    /* Pokemon Font */
+    font-family: 'Pokemon Solid', sans-serif;
+    color: #ffcb05;
+    text-shadow: -4px 0 #2a75bb, 0 1px #2a75bb, 1px 0 #2a75bb, 0 -1px #2a75bb;
+    
+    /* background: */
+    background: rgb(233,223,1);
+    background: linear-gradient(90deg, rgba(233,223,1,1) 0%, rgba(204,119,0,1) 7%, rgba(255,0,0,1) 67%, rgba(204,0,0,1) 79%); 
+}
+
+#connectButton{
+    margin-top: 5px;
+}
+
+#allUsers{
+    display: none;
+}
+
+button , #button{
+    display:inline-block;
+    padding:0.35em 1.2em;
+    border:0.1em solid #FFFFFF;
+    margin:0 0.3em 0.3em 0;
+    border-radius:0.12em;
+    box-sizing: border-box;
+    text-decoration:none;
+    font-family:'Roboto',sans-serif;
+    font-weight:300;
+    color:#FFFFFF;
+    text-align:center;
+    transition: all 0.2s;
+    background-color: #2a75bb;
+}
+
+button:hover , #button:hover{
+    color: #2a75bb;
+    background-color:#FFFFFF;
+}
+
+@media all and (max-width:30em)
+{
+    button , #button:hover{
+        display:block;
+        margin:0.4em auto;
+    }
+}
+
+textarea {
+    resize: none;
+}
+
+input[type=text]{
+    width: 80%;
 }

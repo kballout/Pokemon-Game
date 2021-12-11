@@ -30,6 +30,13 @@ class DB {
         return await doc.find({},{projection:{'_id': 0, 'Socket': 1}}).toArray();
     }
 
+    async getIps(){
+        let client = this.#connect();
+        database = (await client).db(dbName);
+        let doc = database.collection('Users');
+        return await doc.find({},{projection:{'_id': 0, 'Ip': 1}}).toArray();
+    }
+
     async checkIfUserExists(user){
         let client = this.#connect();
         database = (await client).db(dbName);
@@ -41,11 +48,12 @@ class DB {
         return true;
     }
 
-    async createUser(username, socket){
+    async createUser(username, socket, ip){
         let client = this.#connect();
         database = (await client).db(dbName);
         let doc = database.collection('Users');
         let newUser = {
+            Ip: ip,
             User: username,
             Socket: socket,
             High_Score: '0%',
@@ -71,6 +79,18 @@ class DB {
             }
         }
         await doc.updateOne({User: user},update, {upsert: true});
+    }
+
+    async updateUsername(ip, username){
+        let client = this.#connect();
+        database = (await client).db(dbName);
+        let doc = database.collection('Users');
+        let update = {
+            $set:{
+                User:username
+            }
+        }
+        await doc.updateOne({Ip: ip},update, {upsert: true});
     }
 
     async updateCurrentRoom(user,room){

@@ -1,35 +1,21 @@
-window.onload = function() {
+let ip
+window.addEventListener('load', () => {
     const form = document.querySelector('#connectUser');
+    let socket = io()
+    socket.on('connect', () => {
+        socket.emit('userEnteredPage', {
+            ip: ip
+        });
+    })
+  
     form.addEventListener('submit', (event) => {
+        document.querySelector('#ip').setAttribute('value', ip);
+    })
 
-    let name = document.querySelector('#username').value
-    
-    fetch('/getUsers', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        }
-    })
-    .then(res => res.json())
-    .then(json => {
-        let allUsers = json.users
-        if(checkUser(allUsers, name)){
-            event.preventDefault();
-        }
-    })
-    .catch(e => console.log(e.message))
-    })
+})
+
+function setIp(Ip){
+    ip = Ip
 }
 
-
-function checkUser(users, name){
-    for(let i = 0; i < users.length; i++){
-        if(users[i].User === name){
-            alert('someone is using that name')
-            return true;
-        }
-    }
-    return false;
-    
-}
 

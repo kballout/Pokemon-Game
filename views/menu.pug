@@ -1,0 +1,19 @@
+doctype html 
+html(lang = 'en')
+    head 
+        include includes/header.pug
+        link(rel="stylesheet", href="/css/menu.css")
+        script(src = '/js/menu.js')
+    body
+        h1.display-2.text-center Who's that Pokemon
+        h2 Welcome 
+            span#userName.text-center #{user} !
+        a.btn(href = '/game/' + user ,type='button') Create Game
+        br
+        h2 or
+        form#joinGame.text-center(name = 'joinGame', action = '/join', method = 'POST')
+            input#username(type ='text', name = 'username', hidden, value = user)
+            label(for = 'gameID') Enter a Game Link:
+            input#inviteLink(type = 'text', name = 'gameID' required , placeholder="Ex.1234-ABCD-5678")
+            br
+            input(type = 'submit', value = 'Play')

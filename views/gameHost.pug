@@ -4,21 +4,22 @@ html(lang = 'en')
         include includes/header.pug
         link(rel = 'stylesheet', href='/css/game.css')
     body 
-        h1.display-2 Who's that Pokemon
+        h1.display-2 Who's that Pokemon?
         .container#userInfo
-            label(for = '#userName') user: 
+            label(for = '#userName') Username: 
             span#userName #{user}
             br
             label(for = '#invite') Invite Link:
             br
-            textarea#invite(cols = '30', rows = '1', readonly)
+            textarea#invite(cols = '30', rows = '1', readonly , placeholder= "This is some placeholder text")
+            br
         .container#chatbox 
             h3 Chat
             textarea#displayArea(cols = '30', rows = '15', readonly) 
             form#chat(name = 'chat')
                 label(for = 'input_message')
-                input#inputMessage(type = 'text', name = 'inputMessage')
-                input(type = 'submit' ,value = 'Send')
+                input#inputMessage(type = 'text', name = 'inputMessage' , placeholder="Enter chat here...")
+                input#button(type = 'submit' ,value = 'Send')
             br
         .container#main
             button#startGame.btn.btn-primary(type='button') Start Game
@@ -27,9 +28,9 @@ html(lang = 'en')
                 img#pokemonImage(src="/images/Abra.png", alt="")
             form#guess(name = 'guess')
                 label(for = 'guessInput')
-                input#guessInput(type = 'text', name = 'guessInput')
+                input#guessInput(type = 'text', name = 'guessInput' , placeholder= "Enter guess here...")
                 br
-                input(type = 'submit' ,value = 'guess')
+                input#button(type = 'submit' ,value = 'Guess')
         .container#score 
             h3 Scoreboard
             hr

@@ -1,0 +1,23 @@
+doctype html 
+html(lang = 'en')
+    head 
+        script(type='application/javascript').
+            function getIP(json) {
+                let ip = json.ip
+                window.onload = function(){
+                    setIp(ip)
+                }
+            }
+        include includes/header.pug
+        link(rel="stylesheet", href="/css/main.css")
+        script(src = '/js/main.js')
+    body
+        h1.display-2.text-center Who's that Pokemon?
+        form#connectUser.text-center(name = 'connectUser', action = '/connect', method = 'POST')
+            label(for = 'username') Please enter a username to get started!
+            br
+            input#ip(name = 'ip', hidden, value = '')
+            input#username(type = 'text', name = 'username' required , placeholder="Username")
+            br
+            input#connectButton(type = 'submit', value = 'Play')
+    
