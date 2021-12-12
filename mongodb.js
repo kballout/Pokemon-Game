@@ -56,7 +56,7 @@ class DB {
             Ip: ip,
             User: username,
             Socket: socket,
-            High_Score: '0%',
+            Score: 0,
             Current_Room: 'none'
         }
         await doc.insertOne(newUser);
@@ -69,7 +69,27 @@ class DB {
         await doc.deleteOne({Socket: socket});
     }
 
-    async updateGameId(user, socket){
+
+
+    async updateInfoForReload(ip, user, socket, room){
+        let client = this.#connect();
+        database = (await client).db(dbName);
+        let doc = database.collection('Users');
+        let update = {
+            $set:{
+                Ip: ip,
+                User: user,
+                Socket:socket,
+                Score: 0,
+                Current_Room: room
+            }
+        }
+        await doc.updateOne({User: user},update, {upsert: true});
+    }
+
+
+
+    async updateSocketId(user, socket){
         let client = this.#connect();
         database = (await client).db(dbName);
         let doc = database.collection('Users');
@@ -100,6 +120,18 @@ class DB {
         let update = {
             $set:{
                 Current_Room:room
+            }
+        }
+        await doc.updateOne({User: user},update, {upsert: true});
+    }
+
+    async updateCurrentScore(user,score){
+        let client = this.#connect();
+        database = (await client).db(dbName);
+        let doc = database.collection('Users');
+        let update = {
+            $set:{
+                Score :score
             }
         }
         await doc.updateOne({User: user},update, {upsert: true});

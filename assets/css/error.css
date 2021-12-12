@@ -1,0 +1,46 @@
+
+
+h1{
+    font-size: 300%;
+}
+
+p{
+    font-size: 175%;
+}
+
+body{
+    max-width: 700px;
+    margin: auto;
+    text-align: center;
+
+    /* Pokemon Font */
+    font-family: 'Pokemon Solid', sans-serif;
+    color: #ffcb05;
+    text-shadow: -4px 0 #2a75bb, 0 1px #2a75bb, 1px 0 #2a75bb, 0 -1px #2a75bb;
+    
+    /* background: */
+    background: rgb(233,223,1);
+    background: linear-gradient(90deg, rgba(233,223,1,1) 0%, rgba(204,119,0,1) 7%, rgba(255,0,0,1) 67%, rgba(204,0,0,1) 79%); 
+}
+
+#allUsers{
+    display: none;
+}
+
+a{
+    border-style: outset;
+    border-width: 4px;
+    text-decoration: none;
+    color: #ffcb05;
+    text-shadow: -4px 0 #2a75bb, 0 1px #2a75bb, 1px 0 #2a75bb, 0 -1px #2a75bb;
+    font-size: 140%;
+}
+
+a:visited{
+    color: #ffcb05;
+    text-shadow: -4px 0 #2a75bb, 0 1px #2a75bb, 1px 0 #2a75bb, 0 -1px #2a75bb;
+}
+
+a:hover{
+    background: #ffcb05;
+}

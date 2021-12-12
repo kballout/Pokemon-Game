@@ -1,8 +1,15 @@
 doctype html 
 html(lang = 'en')
-    head 
+    head
+        script(type='application/javascript').
+            function getIP(json) {
+                let ip = json.ip
+                window.addEventListener('load', ()=>{
+                    setIp(ip);
+                })
+            }
         include includes/header.pug
-        link(rel = 'stylesheet', href='/css/game.css')
+        link(rel = 'stylesheet', href='/css/gameHost.css')
     body 
         h1.display-2 Who's that Pokemon?
         .container#userInfo
@@ -19,18 +26,20 @@ html(lang = 'en')
             form#chat(name = 'chat')
                 label(for = 'input_message')
                 input#inputMessage(type = 'text', name = 'inputMessage' , placeholder="Enter chat here...")
-                input#button(type = 'submit' ,value = 'Send')
+                input(type = 'submit' ,value = 'Send')
             br
         .container#main
             button#startGame.btn.btn-primary(type='button') Start Game
-            div#clock Time Left: 5 sec
+            div#clock Time Left:
             .container#gameFrame
-                img#pokemonImage(src="/images/Abra.png", alt="")
+                img#pokemonImage(src="/images/QuestionMark.png", alt="")
             form#guess(name = 'guess')
+                label#correctAnswer Pokemon: ?
+                br
                 label(for = 'guessInput')
                 input#guessInput(type = 'text', name = 'guessInput' , placeholder= "Enter guess here...")
                 br
-                input#button(type = 'submit' ,value = 'Guess')
+                input#submitButton(type = 'submit' ,value = 'Guess')
         .container#score 
             h3 Scoreboard
             hr

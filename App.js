@@ -34,11 +34,6 @@ io.on('connection', socket =>{
             }
         }
     })
-    socket.on('createGame', (data) => {
-        mongo.updateGameId(data.user, data.id);
-        mongo.updateCurrentRoom(data.user, data.id);
-        socket.join(data.socket);
-    })
     socket.on('disconnect', async function(){
         let user = await mongo.getUserBySocket(socket.id)
         let room = await mongo.getCurrentRoomBySocket(socket.id);
@@ -46,27 +41,47 @@ io.on('connection', socket =>{
         //io.in(room.Current_Room).emit('userLeftRoom', user.User + ':');
 
     })
+    socket.on('createGame', (data) => {
+        mongo.updateInfoForReload(data.ip, data.user, data.id, data.id);
+        socket.join(data.socket);
+    })
+    
     socket.on('joinGame', async (data)=>{
-        mongo.updateGameId(data.user, socket.id);
-        mongo.updateCurrentRoom(data.user, data.id);
-        let usersInRoom = await mongo.getUsersInARoom(data.id);
+        mongo.updateInfoForReload(data.ip, data.user, socket.id, data.id)
+        //let usersInRoom = await mongo.getUsersInARoom(data.id);
         socket.join(data.id);
-        io.in(data.id).emit('userJoined', data, usersInRoom);
+        io.to(data.id).emit('userJoined', data);
     })
     socket.on('sendMessage', (data)=>{
         io.in(data.id).emit('getMessage', data.msg);
     })
     socket.on('startGame', (data)=>{
-
         nextImage = getRandomPokemon(pokeMap);
         console.log(nextImage)
         fs.readFile('./pictures/' + nextImage, (error, image) => {
             io.in(data.id).emit('getNext',{
                 image: {image: true, buffer: image.toString('base64')}, 
-                name: nextImage.substring(0, nextImage.length - 3)
+                name: nextImage.substring(0, nextImage.length - 4)
             });
         })
     })
+    socket.on('correctGuess', (data)=>{
+        console.log(data.user + ' won this round' )
+        io.in(data.id).emit('userGuessedCorrectly', {
+            winner: data.user
+        })
+    })
+   
+
+
+
+
+
+    // socket.on('updateScores', (data) => {
+    //     io.in(socket.id).emit('scoreboard', {
+    //         scoreboard: data.scoreboard
+    //     })
+    // })
 })
 
 
@@ -105,7 +120,6 @@ app.post('/connect', async (req, res) => {
     let result = 'verified';
     let name = req.body.username;
     let allUsers = await mongo.getUsers();
-    console.log(allUsers)
     for(let user of allUsers){
         if(name === user.User){
             result = 'error'
@@ -128,14 +142,15 @@ app.post('/deleteUser', async (req, res) => {
  })
 
 app.post('/join', async (req, res) => {
+   let host = await mongo.getUserBySocket(req.body.gameID);
     res.render('gameJoin', {
         id: req.body.gameID,
-        user: req.body.username
+        user: req.body.username,
+        host: host
     })
  })
 
  app.post('/getIds', async (req, res) => {
-     console.log(req.body)
     let ids = await mongo.getIds();
     res.json({
         userIds: ids

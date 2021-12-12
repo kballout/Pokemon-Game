@@ -1,3 +1,6 @@
+#correctAnswer{
+    font-size: 140%;
+}
 
 .hidden{
     visibility: hidden;
@@ -81,7 +84,7 @@ body{
     display: none;
 }
 
-button , #button{
+button , input[type=submit]{
     display:inline-block;
     padding:0.35em 1.2em;
     border:0.1em solid #FFFFFF;
@@ -97,14 +100,14 @@ button , #button{
     background-color: #2a75bb;
 }
 
-button:hover , #button:hover{
+button:hover , input[type=submit]:hover{
     color: #2a75bb;
     background-color:#FFFFFF;
 }
 
 @media all and (max-width:30em)
 {
-    button , #button:hover{
+    button , input[type=submit]:hover{
         display:block;
         margin:0.4em auto;
     }

@@ -5,15 +5,16 @@ html(lang = 'en')
         link(rel="stylesheet", href="/css/menu.css")
         script(src = '/js/menu.js')
     body
-        h1.display-2.text-center Who's that Pokemon
-        h2 Welcome 
+        h1.display-2.text-center Who's that Pokemon?
+        h2#welcome Welcome 
             span#userName.text-center #{user} !
-        a.btn(href = '/game/' + user ,type='button') Create Game
+        a.btn(href = '/game/' + user ,type='button') Create Host Game
         br
-        h2 or
+        h2#or or
         form#joinGame.text-center(name = 'joinGame', action = '/join', method = 'POST')
             input#username(type ='text', name = 'username', hidden, value = user)
-            label(for = 'gameID') Enter a Game Link:
-            input#inviteLink(type = 'text', name = 'gameID' required , placeholder="Ex.1234-ABCD-5678")
+            label(for = 'gameID') Enter a Room Key:
+            br
+            input#inviteLink(type = 'text', name = 'gameID' required , placeholder="Ex.Yg3mNNI0pCh2Y_OAAAAR")
             br
             input(type = 'submit', value = 'Play')

@@ -1,37 +1,71 @@
-
-
-h1{
-    font-size: 300%;
+#correctAnswer{
+    font-size: 140%;
 }
 
-#welcome{
-    font-size: 250%;
-    margin-top: -50px;
+
+.hidden{
+    visibility: hidden;
 }
 
-#or{
-    font-size: 200%;
-    margin-top: -15px;
-    margin-bottom: -15px;
+hr{
+    color: white;
 }
 
-label{
-    font-size: 200%;
+#userInfo{
+    float: left;
+    padding-left: 20px;
+    font-size: larger;
 }
 
-input[type=text]{
-    font-size: 120%;
-    width: 25%;
+h1, #startGame{
+    text-align: center !important;
 }
 
-input[type=submit]{
-    font-size: 100%;
+#main{
+    border: 1px solid white;
+    width: fit-content;
+    text-align: center;
+    margin: auto;
+}
+
+#gameFrame{
+    border: 1px solid white;
+    width: fit-content;
+    padding: 5px;
+    margin: 10px;
+}
+
+#chatbox{
+    border: 1px solid white;
+    width: fit-content;
+    padding: 5px;
+    text-align: center;
+    position: relative;
+    top: 120px;
+    right: 250px;
+    float: left;
+    margin-top: 50px;
+    font-size: larger;
+}
+
+#score{
+    text-align: center;
+    border: 1px solid white;
+    width: 200px;
+    height: 500px;
+    padding: 5px;
+    margin: 10px;
+    float: right;
+    position: relative;
+    bottom: 500px;
+}
+
+img{
+    filter: contrast(0%) brightness(20%)
 }
 
 body{
-    max-width: 700px;
     margin: auto;
-    text-align: center;
 
     /* Pokemon Font */
     font-family: 'Pokemon Solid', sans-serif;
@@ -80,25 +114,10 @@ button:hover , input[type=submit]:hover{
     }
 }
 
-a{
-    border-style: outset;
-    border-width: 4px;
-    text-decoration: none;
-    color: #ffcb05;
-    text-shadow: -4px 0 #2a75bb, 0 1px #2a75bb, 1px 0 #2a75bb, 0 -1px #2a75bb;
-    font-size: 140%;
+textarea {
+    resize: none;
 }
 
-a:visited{
-    color: #ffcb05;
-    text-shadow: -4px 0 #2a75bb, 0 1px #2a75bb, 1px 0 #2a75bb, 0 -1px #2a75bb;
-}
-
-a:hover{
-    background: #ffcb05;
-}
-
-input[type=text]
-{
-    width: 50%;
+input[type=text]{
+    width: 80%;
 }
