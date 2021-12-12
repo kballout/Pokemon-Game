@@ -40,10 +40,16 @@ window.onload = function(){
 
 //Start button is clicked and game begins
 startBtn.addEventListener('click', ()=>{
-    startBtn.style.display = 'none';
-    socket.emit('startGame', {
-        id: socket.id
-    });
+    if(startBtn.innerHTML === 'Start Game'){
+        startBtn.innerHTML = 'End Game';
+        socket.emit('startGame');
+    }
+    else if(startBtn.innerHTML === 'End Game'){
+        startBtn.innerHTML = 'Start Game';
+        time = 10;
+        socket.emit('endGame');
+        startBtn.style.display = 'none';
+    }
 })
 
 //Chat buttton
@@ -99,22 +105,21 @@ function editScoreboard(winner){
 //SOCKET LISTENERS
 //Next image
 socket.on('getNext', (data) => {
-    // let list = document.getElementsByTagName('li');
-    // let array = [];
-    // for(let element of list){
-    //     array.push(element.innerHTML);
-    // }
-    // socket.emit('updateScores', {
-    //     scoreboard: array
-    // })
-    solution = data.name;
-    document.getElementById('pokemonImage').style.filter = "contrast(0%)"
-    document.getElementById('pokemonImage').style.filter = "brightness(0%)"
-    prevImage.setAttribute('src', 'data:image/jpeg;base64,' + data.image.buffer);
-    guessInput.value = '';
-    answer.innerHTML = 'Pokemon: ?';
-    submitButton.disabled = false;
-    beginTimer();
+    if(startBtn.innerHTML === 'End Game'){
+        solution = data.name;
+        document.getElementById('pokemonImage').style.filter = "contrast(0%)"
+        document.getElementById('pokemonImage').style.filter = "brightness(0%)"
+        prevImage.setAttribute('src', 'data:image/jpeg;base64,' + data.image.buffer);
+        guessInput.value = '';
+        answer.innerHTML = 'Pokemon: ?';
+        submitButton.disabled = false;
+        beginTimer();
+    }
+    else{
+        prevImage.setAttribute('src', '/images/QuestionMark.png');
+        submitButton.disabled = true;
+        clock.innerHTML = 'Game Over';
+    }
 })
 
 //New user joined room
@@ -132,7 +137,7 @@ socket.on('getMessage', (message)=>{
 
 //User left the room
 socket.on('userLeftRoom', (user) => {
-    console.log(user)
+    scoreMap.delete(user);
     for(let element of scoreboard.children){
         if(element.innerHTML.includes(user)){
             scoreboard.removeChild(element);
@@ -153,12 +158,11 @@ socket.on('userLeftRoom', (user) => {
     editScoreboard(winner.winner)
  })
 
-//Send updated scoreboard
-function sendUpdatedScores(){
-    
-}
-
-
+socket.on('gameOver', ()  => {
+    startBtn.innerHTML = 'Start Game';
+    time = 10;
+    startBtn.style.display = 'none';
+})
 
 
 
@@ -183,9 +187,7 @@ function nextRoundTimer(){
     if(time > 3){
         time = 0;
         setTimeout(() => {
-            socket.emit('startGame', {
-                id: socket.id
-            });
+            socket.emit('startGame');
         }, 1000);
     }
     else{

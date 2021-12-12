@@ -26,6 +26,7 @@ input[type=text]{
 
 input[type=submit]{
     font-size: 100%;
+    padding: 10px;
 }
 
 body{
@@ -87,6 +88,7 @@ a{
     color: #ffcb05;
     text-shadow: -4px 0 #2a75bb, 0 1px #2a75bb, 1px 0 #2a75bb, 0 -1px #2a75bb;
     font-size: 140%;
+    padding: 5px;
 }
 
 a:visited{

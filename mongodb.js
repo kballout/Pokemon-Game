@@ -69,6 +69,13 @@ class DB {
         await doc.deleteOne({Socket: socket});
     }
 
+    async deleteUserByName(name){
+        let client = this.#connect();
+        database = (await client).db(dbName);
+        let doc = database.collection('Users');
+        await doc.deleteOne({User: name});
+    }
+
 
 
     async updateInfoForReload(ip, user, socket, room){
@@ -125,30 +132,28 @@ class DB {
         await doc.updateOne({User: user},update, {upsert: true});
     }
 
-    async updateCurrentScore(user,score){
+    async updateCurrentScore(user){
         let client = this.#connect();
         database = (await client).db(dbName);
         let doc = database.collection('Users');
-        let update = {
-            $set:{
-                Score :score
-            }
-        }
-        await doc.updateOne({User: user},update, {upsert: true});
+        let value = await doc.findOne({User:user}, {projection:{'_id': 0, 'Score': 1}});
+        let score = value.Score;
+        score++;
+        doc.findOneAndUpdate({User:user},{$set:{Score: score}});
     }
 
     async getUsersInARoom(room){
         let client = this.#connect();
         database = (await client).db(dbName);
         let doc = database.collection('Users');
-        return await doc.find({Current_Room: room},{projection:{'_id': 0, 'User':1}}).toArray();
+        return await doc.find({Current_Room: room},{projection:{'_id': 0, 'User':1, 'Score': 1}}).toArray();
     }
 
     async getUserBySocket(socket){
         let client = this.#connect();
         database = (await client).db(dbName);
         let doc = database.collection('Users');
-        return await doc.findOne({Socket:socket}, {projection:{'_id':0, 'User': 1}});
+        return await doc.findOne({Socket:socket}, {projection:{'_id':0, 'User': 1,'Socket': 1, 'Current_Room': 1}});
     }
 
     async getCurrentRoomBySocket(socket){

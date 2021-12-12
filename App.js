@@ -16,7 +16,9 @@ app.use(express.urlencoded({extended: false}));
 const server = http.createServer(app);
 const io = socketio(server);
 let pokeMap = getPokeMap();
+let alreadyDone = new Map();
 let nextImage;
+let count = 0;
 
 io.on('connection', socket =>{
     socket.on('userEnteredPage', async (data) => {
@@ -38,51 +40,74 @@ io.on('connection', socket =>{
         let user = await mongo.getUserBySocket(socket.id)
         let room = await mongo.getCurrentRoomBySocket(socket.id);
         mongo.deleteUser(socket.id);
-        //io.in(room.Current_Room).emit('userLeftRoom', user.User + ':');
+        if(room != null){
+            io.in(room.Current_Room).emit('userLeftRoom', user.User);
+        }
 
     })
     socket.on('createGame', (data) => {
-        mongo.updateInfoForReload(data.ip, data.user, data.id, data.id);
-        socket.join(data.socket);
+        if(data.ip != null){
+            //CHANGE
+            mongo.updateInfoForReload(count, data.user, data.id, data.id);
+        }
+        else{
+            count++;
+            mongo.updateInfoForReload(count, data.user, socket.id, data.id)
+        }
+        alreadyDone.set(data.id, pokeMap);
     })
     
     socket.on('joinGame', async (data)=>{
-        mongo.updateInfoForReload(data.ip, data.user, socket.id, data.id)
-        //let usersInRoom = await mongo.getUsersInARoom(data.id);
+        if(data.ip != null){
+            //CHANGE
+            mongo.updateInfoForReload(count, data.user, socket.id, data.id)
+        }
+        else{
+            count++
+            mongo.updateInfoForReload(count, data.user, socket.id, data.id)
+        }
+        let usersInRoom = await mongo.getUsersInARoom(data.id);
         socket.join(data.id);
-        io.to(data.id).emit('userJoined', data);
+        io.in(data.id).emit('userJoined', data, usersInRoom);
     })
     socket.on('sendMessage', (data)=>{
         io.in(data.id).emit('getMessage', data.msg);
     })
-    socket.on('startGame', (data)=>{
-        nextImage = getRandomPokemon(pokeMap);
-        console.log(nextImage)
-        fs.readFile('./pictures/' + nextImage, (error, image) => {
-            io.in(data.id).emit('getNext',{
-                image: {image: true, buffer: image.toString('base64')}, 
-                name: nextImage.substring(0, nextImage.length - 4)
-            });
-        })
+    socket.on('startGame', ()=>{
+        nextImage = getRandomPokemon(socket.id);
+        if(nextImage == undefined){
+            io.in(socket.id).emit('gameOver')
+            alreadyDone.delete(socket.id);
+        }
+        else{
+            console.log(nextImage)
+            fs.readFile('./pictures/' + nextImage, (error, image) => {
+                io.in(socket.id).emit('getNext',{
+                    image: {image: true, buffer: image.toString('base64')}, 
+                    name: nextImage.substring(0, nextImage.length - 4)
+                });
+            })
+        }
     })
     socket.on('correctGuess', (data)=>{
         console.log(data.user + ' won this round' )
+        mongo.updateCurrentScore(data.user);
         io.in(data.id).emit('userGuessedCorrectly', {
             winner: data.user
         })
     })
-   
-
-
-
-
-
-    // socket.on('updateScores', (data) => {
-    //     io.in(socket.id).emit('scoreboard', {
-    //         scoreboard: data.scoreboard
-    //     })
-    // })
+    socket.on('endGame', () => {
+        io.in(socket.id).emit('gameOver');
+        alreadyDone.delete(socket.id);
+    })
 })
+
+
+
+
+
+
+
 
 
 
@@ -111,6 +136,18 @@ app.get('/menu/:user' , async (req, res) => {
 app.get('/userError', (req, res) => {
     res.render('errors/usernameTaken');
 })
+
+app.get('/doesntExistError', (req, res) => {
+    res.render('errors/userNotFound');
+})
+
+app.get('/roomError', (req, res) => {
+    res.render('errors/roomNotFound');
+})
+
+
+
+
 
 
 
@@ -142,12 +179,22 @@ app.post('/deleteUser', async (req, res) => {
  })
 
 app.post('/join', async (req, res) => {
-   let host = await mongo.getUserBySocket(req.body.gameID);
-    res.render('gameJoin', {
-        id: req.body.gameID,
-        user: req.body.username,
-        host: host
-    })
+    let host = await mongo.getUserBySocket(req.body.gameID);
+    if(host == null){
+        mongo.deleteUserByName(req.body.username);
+        res.redirect('/roomError');
+    }
+    else if(host.Current_Room != host['Socket']){
+        mongo.deleteUserByName(req.body.username);
+        res.redirect('/roomError');
+    }
+    else{
+        res.render('gameJoin', {
+            id: req.body.gameID,
+            user: req.body.username,
+            host: host
+        })
+    }
  })
 
  app.post('/getIds', async (req, res) => {
@@ -173,7 +220,13 @@ function getPokeMap(){
 }
 
 
-function getRandomPokemon(pokeMap){
-    return(pokeMap[Math.floor(Math.random() * pokeMap.length)]);
+function getRandomPokemon(socket){
+    let done = alreadyDone.get(socket);
+    let index = Math.floor(Math.random() * done.length);
+    let next = done[index];
+    done.splice(index, 1);
+    alreadyDone.set(socket, done);
+    console.log(alreadyDone)
+    return next;
 }
 

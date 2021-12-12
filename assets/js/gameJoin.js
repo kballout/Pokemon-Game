@@ -3,7 +3,6 @@ let box = document.querySelector('#displayArea');
 let form = document.querySelector('#chat');
 let user = document.querySelector('#userName')
 let gameid = document.querySelector('#gameId');
-let host = document.querySelector('#host');
 let prevImage = document.querySelector('#pokemonImage');
 let scoreboard = document.querySelector('#usersInLobby');
 let clock = document.querySelector('#clock')
@@ -12,6 +11,7 @@ let guessInputJoin = document.querySelector('#guessInput');
 let submitButtonJoin = document.querySelector('#submitButton');
 let answerJoin = document.querySelector('#correctAnswer');
 let solution;
+let gameOver = false;
 let time = 0;
 let socket = io();
 let scoreMap = new Map();
@@ -23,9 +23,9 @@ function setIp(Ip){
 }
 
 window.onload = function(){
-    
     socket.on('connect', () => {
        socket.emit('joinGame', {
+           ip: ip,
            user: user.innerHTML, 
            id: gameid.innerHTML
        });
@@ -74,7 +74,11 @@ function editScoreboard(winner){
     }
 }
 
-
+function updateScoreboard(user){
+    let li = document.createElement('li')
+    scoreboard.appendChild(li);
+    li.textContent = user + ': \t ' + scoreMap.get(user) + ' Pts';
+}
 
 
 
@@ -87,48 +91,44 @@ socket.on('getMessage', (message)=>{
 
 //Get next image
 socket.on('getNext', (data) => {
-    console.log(data);
-    solution = data.name;
-    document.getElementById('pokemonImage').style.filter = "contrast(0%)"
-    document.getElementById('pokemonImage').style.filter = "brightness(0%)"
-    prevImage.setAttribute('src', 'data:image/jpeg;base64,' + data.image.buffer);
-    guessInputJoin.value = '';
-    answerJoin.innerHTML = 'Pokemon: ?';
-    submitButtonJoin.disabled = false;
-    beginTimer();
+    if(gameOver === false){
+        solution = data.name;
+        document.getElementById('pokemonImage').style.filter = "contrast(0%)"
+        document.getElementById('pokemonImage').style.filter = "brightness(0%)"
+        prevImage.setAttribute('src', 'data:image/jpeg;base64,' + data.image.buffer);
+        guessInputJoin.value = '';
+        answerJoin.innerHTML = 'Pokemon: ?';
+        submitButtonJoin.disabled = false;
+        beginTimer();
+    }
+    else{
+        prevImage.setAttribute('src', '/images/QuestionMark.png');
+        submitButton.disabled = true;
+        clock.innerHTML = 'Game Over';
+    }
 })
 
 //New user joined the room
-socket.on('joinedTheHost', (data) => {
+socket.on('userJoined', (data, usersInRoom) => {
     console.log(data)
-    // let li = document.createElement('li')
-    // scoreboard.appendChild(li);
-    // scoreMap.set(data.user, 0);
-    // li.textContent = data.user + ': \t 0 Pts';
+    console.log(usersInRoom)
+    for(let user of usersInRoom){
+        if(!scoreMap.has(user.User)){
+            scoreMap.set(user.User, user.Score);
+            updateScoreboard(user.User);
+        }
+    }
 });
 
 //User left the room
 socket.on('userLeftRoom', (user) => {
-    console.log(user)
+    scoreMap.delete(user);
     for(let element of scoreboard.children){
         if(element.innerHTML.includes(user)){
             scoreboard.removeChild(element);
         }
     }
  })
-
-//Scoreboard update
-socket.on('scoreboard', (data) => {
-    for(let element of scoreboard.children){
-        scoreboard.removeChild(element);
-    }
-    let array = data.scoreboard;
-    for(let next of array){
-        let li = document.createElement('li')
-        scoreboard.appendChild(li);
-        li.textContent = next;
-    }
-})
 
 //User guessed correctly
 socket.on('userGuessedCorrectly', (winner) => {
@@ -137,14 +137,16 @@ socket.on('userGuessedCorrectly', (winner) => {
     document.getElementById('pokemonImage').style.filter = "brightness(100%)"
     time = 10;
     answerJoin.innerHTML = 'Pokemon: ' + solution;
-    // let currentScore = scoreMap.get(winner.winner);
-    // currentScore++;
-    // scoreMap.set(winner.winner, currentScore);
-    // editScoreboard(winner.winner)
+    let currentScore = scoreMap.get(winner.winner);
+    currentScore++;
+    scoreMap.set(winner.winner, currentScore);
+    editScoreboard(winner.winner)
  })
 
- 
-
+socket.on('gameOver', () => {
+    time = 10;
+    gameOver = true;
+})
 
 
 

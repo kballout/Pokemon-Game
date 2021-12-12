@@ -22,6 +22,7 @@ h1, #startGame{
 
 #main{
     border: 1px solid white;
+    border-radius: 10px;
     width: fit-content;
     text-align: center;
     margin: auto;
@@ -36,12 +37,14 @@ h1, #startGame{
 
 #chatbox{
     border: 1px solid white;
+    border-radius: 10px;
+    background-color: blue;
     width: fit-content;
     padding: 5px;
     text-align: center;
     position: relative;
-    top: 120px;
-    right: 265px;
+    top: 150px;
+    right: 100px;
     float: left;
     margin-top: 50px;
     font-size: larger;
@@ -50,13 +53,15 @@ h1, #startGame{
 #score{
     text-align: center;
     border: 1px solid white;
+    background-color: blue;
+    border-radius: 10px;
     width: 200px;
     height: 500px;
     padding: 5px;
     margin: 10px;
     float: right;
     position: relative;
-    bottom: 500px;
+    bottom: 550px;
 }
 
 img{

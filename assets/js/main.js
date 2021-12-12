@@ -8,7 +8,7 @@ window.addEventListener('load', () => {
         });
     })
   
-    form.addEventListener('submit', (event) => {
+    form.addEventListener('submit', () => {
         document.querySelector('#ip').setAttribute('value', ip);
     })
 

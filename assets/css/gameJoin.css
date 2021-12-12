@@ -2,7 +2,6 @@
     font-size: 140%;
 }
 
-
 .hidden{
     visibility: hidden;
 }
@@ -17,12 +16,17 @@ hr{
     font-size: larger;
 }
 
+#gameId, #host{
+    display: none;
+}
+
 h1, #startGame{
     text-align: center !important;
 }
 
 #main{
     border: 1px solid white;
+    border-radius: 10px;
     width: fit-content;
     text-align: center;
     margin: auto;
@@ -37,12 +41,14 @@ h1, #startGame{
 
 #chatbox{
     border: 1px solid white;
+    border-radius: 10px;
+    background-color:blue;
     width: fit-content;
     padding: 5px;
     text-align: center;
     position: relative;
-    top: 120px;
-    right: 250px;
+    top: 150px;
+    right: 10px;
     float: left;
     margin-top: 50px;
     font-size: larger;
@@ -51,6 +57,8 @@ h1, #startGame{
 #score{
     text-align: center;
     border: 1px solid white;
+    background-color: blue;
+    border-radius: 10px;
     width: 200px;
     height: 500px;
     padding: 5px;

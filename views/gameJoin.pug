@@ -16,8 +16,7 @@ html(lang = 'en')
             label(for = '#userName') Username: 
             span#userName #{user}
             br
-            span#gameId.hidden #{id}
-            span#host.hidden #{host}
+            span#gameId #{id}
         .container#chatbox 
             h3 Chat
             textarea#displayArea(cols = '30', rows = '15', readonly) 
@@ -30,7 +29,7 @@ html(lang = 'en')
             div#clock Time Left:
             .container#gameFrame
                 img#pokemonImage(src="/images/QuestionMark.png", alt="")
-            form#guess(name = 'guess')
+            form#guess(name = 'guess', autocomplete='off')
                 label#correctAnswer Pokemon: ?
                 br
                 label(for = 'guessInput')
