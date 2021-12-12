@@ -48,7 +48,7 @@ io.on('connection', socket =>{
     socket.on('createGame', (data) => {
         if(data.ip != null){
             //CHANGE
-            mongo.updateInfoForReload(count, data.user, data.id, data.id);
+            mongo.updateInfoForReload(data.ip, data.user, data.id, data.id);
         }
         else{
             count++;
@@ -60,7 +60,7 @@ io.on('connection', socket =>{
     socket.on('joinGame', async (data)=>{
         if(data.ip != null){
             //CHANGE
-            mongo.updateInfoForReload(count, data.user, socket.id, data.id)
+            mongo.updateInfoForReload(data.ip, data.user, socket.id, data.id)
         }
         else{
             count++
